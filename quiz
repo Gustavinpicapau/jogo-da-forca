@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .question {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz de bosta</h1>
+    <div id="quiz">
+        <p class="question">Espera Cornomanço...</p>
+        <div id="options"></div>
+    </div>
+    <p id="score">Pontuação de vascaíno: 0</p>
+    <script>
+        const questions = [
+            { question: "Qual é a capital do Brasil?", options: ["Brasília", "Linhares", "Pindamonhanguaba"], answer: 0 },
+            { question: "Quem é melhor no gol?", options: ["Messi", "Pica-Pau", "CR7"], answer: 1 },
+            { question: "Qual a melhor matéria da escola?", options: ["Português", "Ed.Física", "Geografia"], answer: 1 },
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const quiz = document.getElementById('quiz');
+            const questionElem = quiz.querySelector('.question');
+            const optionsElem = document.getElementById('options');
+
+            questionElem.textContent = questions[currentQuestion].question;
+            optionsElem.innerHTML = "";
+
+            questions[currentQuestion].options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.onclick = () => checkAnswer(index);
+                optionsElem.appendChild(button);
+            });
+        }
+
+        function checkAnswer(index) {
+            if (index === questions[currentQuestion].answer) {
+                score++;
+                document.getElementById('score').textContent = `Pontuação: ${score}`;
+            }
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                alert('O pior quiz foi finalizado! Pontuação de côcô: ' + score);
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
