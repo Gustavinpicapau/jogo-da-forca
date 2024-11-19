@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Forca</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        #wordDisplay {
+            font-size: 24px;
+            letter-spacing: 5px;
+            margin: 20px 0;
+        }
+        #message {
+            font-size: 18px;
+            color: red;
+            margin: 10px 0;
+        }
+        #usedLetters {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        #hangman {
+            font-size: 30px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin: 10px 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jogo da Forca</h1>
+    <p id="hangman">Erros: 0</p>
+    <div id="wordDisplay">_ _ _ _ _</div>
+    <p id="message"></p>
+    <div>
+        <input type="text" id="letterInput" maxlength="1" placeholder="Digite uma letra">
+        <button onclick="guessLetter()">Chutar</button>
+    </div>
+    <p id="usedLetters">Letras usadas: Nenhuma</p>
+
+    <script>
+        const words = ["GUSTAVIN", "GRANDE", "MATHEUS", "YAN", "RIQUELMY"];
+        const secretWord = words[Math.floor(Math.random() * words.length)];
+        let displayedWord = "_ ".repeat(secretWord.length).trim();
+        let wrongGuesses = 0;
+        let guessedLetters = [];
+
+        document.getElementById("wordDisplay").textContent = displayedWord;
+
+        function guessLetter() {
+            const letterInput = document.getElementById("letterInput");
+            const guess = letterInput.value.toUpperCase();
+            letterInput.value = "";
+
+            if (!guess || guessedLetters.includes(guess)) {
+                document.getElementById("message").textContent = "Letra inválida ou já utilizada!";
+                return;
+            }
+
+            guessedLetters.push(guess);
+            document.getElementById("usedLetters").textContent = "Letras usadas: " + guessedLetters.join(", ");
+
+            if (secretWord.includes(guess)) {
+                updateDisplayedWord(guess);
+                document.getElementById("message").textContent = "Boa! Continue!";
+            } else {
+                wrongGuesses++;
+                document.getElementById("hangman").textContent = "Erros: " + wrongGuesses;
+                document.getElementById("message").textContent = "Letra errada!";
+            }
+
+            if (wrongGuesses >= 6) {
+                document.getElementById("message").textContent = "Você perdeu! A palavra era: " + secretWord;
+                endGame();
+            } else if (!displayedWord.includes("_")) {
+                document.getElementById("message").textContent = "Parabéns, você ganhou!";
+                endGame();
+            }
+        }
+
+        function updateDisplayedWord(letter) {
+            let updatedWord = "";
+            for (let i = 0; i < secretWord.length; i++) {
+                updatedWord += secretWord[i] === letter ? letter : displayedWord[i * 2];
+                updatedWord += " ";
+            }
+            displayedWord = updatedWord.trim();
+            document.getElementById("wordDisplay").textContent = displayedWord;
+        }
+
+        function endGame() {
+            document.getElementById("letterInput").disabled = true;
+            document.querySelector("button").disabled = true;
+        }
+    </script>
+</body>
+</html>
